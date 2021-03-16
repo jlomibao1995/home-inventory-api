@@ -12,9 +12,8 @@ import java.util.List;
 public class Role {
     @Id
     @SequenceGenerator(
-            name ="role_sequence",
-            sequenceName = "role_sequence",
-            allocationSize = 1
+            name = "role_sequence",
+            sequenceName = "role_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -35,8 +34,7 @@ public class Role {
     @OneToMany(
             mappedBy = "role",
             orphanRemoval = true,
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.LAZY
+            cascade = {CascadeType.ALL}
     )
     private List<User> users = new ArrayList<>();
 

@@ -12,9 +12,8 @@ public class Item {
 
     @Id
     @SequenceGenerator(
-            name ="item_sequence",
-            sequenceName = "item_sequence",
-            allocationSize = 1
+            name = "item_sequence",
+            sequenceName = "item_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -94,12 +93,11 @@ public class Item {
         this.category = category;
     }
 
-    @JsonIgnore
-    public User getOwner() {
+    public User getUser() {
         return user;
     }
 
-    public void setOwner(User owner) {
+    public void setUser(User owner) {
         this.user = owner;
     }
 

@@ -18,15 +18,17 @@ import java.util.List;
 public class User {
     @Id
     @SequenceGenerator(
-            name ="user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
+            name = "user_sequence",
+            sequenceName = "user_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    @Column(name = "id")
+    @Column(
+            name = "id",
+            updatable = false
+    )
     private Long id;
     private String email;
     private boolean active;
@@ -34,9 +36,8 @@ public class User {
     private String password;
 
     @ManyToOne
-    @JoinColumn(
-            name = "role_id",
-            nullable = false,
+    @JoinColumn(name = "role_id",
+            referencedColumnName = "id",
             foreignKey = @ForeignKey(
                     name = "user_role_id_fk"
             )
@@ -47,7 +48,7 @@ public class User {
             mappedBy = "user",
             orphanRemoval = true,
             cascade = {CascadeType.ALL},
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
     private List<Item> items = new ArrayList<>();
 

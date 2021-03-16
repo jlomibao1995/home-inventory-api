@@ -47,17 +47,17 @@ public class UserConfig {
             Item item1 = new Item("Blender", 15);
             category.getItems().add(item1);
             item1.setCategory(category);
-            item1.setOwner(owner);
+            item1.setUser(owner);
 
             Item item2 = new Item("Fan", 20);
             category.getItems().add(item2);
             item2.setCategory(category);
-            item2.setOwner(owner);
+            item2.setUser(owner);
 
             Item item3 = new Item("Sofa", 499.99);
             category.getItems().add(item3);
             item3.setCategory(category);
-            item3.setOwner(owner);
+            item3.setUser(owner);
 
             categoryRepository.saveAndFlush(category);
 

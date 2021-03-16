@@ -13,9 +13,8 @@ public class Category {
 
     @Id
     @SequenceGenerator(
-            name ="category_sequence",
-            sequenceName = "category_sequence",
-            allocationSize = 1
+            name = "category_sequence",
+            sequenceName = "category_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
