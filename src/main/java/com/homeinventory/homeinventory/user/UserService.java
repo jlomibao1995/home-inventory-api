@@ -68,4 +68,13 @@ public class UserService {
         }
     }
 
+    public User getUser(String email) {
+        Optional<User> user = userRepository.findUserByEmail(email);
+
+        if(user.isPresent()){
+            return user.get();
+        } else {
+            throw new IllegalArgumentException("User with that email does not exist");
+        }
+    }
 }

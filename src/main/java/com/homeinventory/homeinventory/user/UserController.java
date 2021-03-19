@@ -7,6 +7,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping( path = "inventory/api/v1/user")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     private final UserService userService;
@@ -19,6 +20,11 @@ public class UserController {
     @GetMapping
     public List<User> getUsers(){
         return userService.getUsers();
+    }
+
+    @GetMapping(path = "{email}")
+    public User getUser(@PathVariable("email") String email ){
+        return userService.getUser(email);
     }
 
     @PostMapping

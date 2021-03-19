@@ -93,6 +93,7 @@ public class Item {
         this.category = category;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }
