@@ -20,9 +20,9 @@ public class UserConfig {
             Role role1 = new Role("Admin");
             Role role2 = new Role("Regular User");
 
-            User user1 = new User("jean@gmail.com", true, "Jean", "password");
-            User user2 = new User("admin@gmail.com", true, "Admin", "password");
-            User user3 = new User("jane@gmail.com", true, "Jane", "password");
+            User user1 = new User("jean@gmail.com", true, "Jean", "$2a$04$pQUD83OuKstoVU8DUsb9Xek7PB3SVtmarPOEWTPleakM8nLCxOrT.");
+            User user2 = new User("admin@gmail.com", true, "Admin", "$2a$04$pQUD83OuKstoVU8DUsb9Xek7PB3SVtmarPOEWTPleakM8nLCxOrT.");
+            User user3 = new User("jane@gmail.com", true, "Jane", "$2a$04$pQUD83OuKstoVU8DUsb9Xek7PB3SVtmarPOEWTPleakM8nLCxOrT.");
 
             user2.setRole(role1);
             user1.setRole(role2);
