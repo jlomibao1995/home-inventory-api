@@ -7,7 +7,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping( path = "inventory/api/v1/user")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class UserController {
 
     private final UserService userService;
