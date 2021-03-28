@@ -1,5 +1,6 @@
 package com.homeinventory.homeinventory.item;
 
+import com.homeinventory.homeinventory.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "inventory/api/v1/item")
+@CrossOrigin
 public class ItemController {
 
     private final ItemService itemService;
@@ -19,6 +21,11 @@ public class ItemController {
     @GetMapping
     public List<Item> getItems(){
         return itemService.getItems();
+    }
+
+    @GetMapping(path = "{email}")
+    public List<Item> getItems(@PathVariable("email") String email ){
+        return itemService.getItems(email);
     }
 
     @PostMapping

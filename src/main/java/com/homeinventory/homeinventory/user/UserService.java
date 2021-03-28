@@ -1,10 +1,12 @@
 package com.homeinventory.homeinventory.user;
 
+import com.homeinventory.homeinventory.item.Item;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,10 +15,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getUsers(){
@@ -24,6 +28,8 @@ public class UserService {
     }
 
     public void addNewUser(User user){
+        String password = user.getPassword();
+        user.setPassword(passwordEncoder.encode(password));
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
         if (userOptional.isPresent()){
             throw new IllegalStateException("Email taken");
@@ -64,7 +70,7 @@ public class UserService {
         }
 
         if (password != null && password.length() > 0 && !Objects.equals(user.getPassword(), password)){
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
     }
 
@@ -72,6 +78,9 @@ public class UserService {
         Optional<User> user = userRepository.findUserByEmail(email);
 
         if(user.isPresent()){
+            for (Item item: user.get().getItems()){
+                item.setUser(null);
+            }
             return user.get();
         } else {
             throw new IllegalArgumentException("User with that email does not exist");

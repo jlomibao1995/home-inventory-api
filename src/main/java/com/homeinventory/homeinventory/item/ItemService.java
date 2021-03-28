@@ -79,4 +79,18 @@ public class ItemService {
         }
 
     }
+
+    public List<Item> getItems(String email) {
+        Optional<List<Item>> items = itemRepository.findAllByUser_Email(email);
+
+        if (!items.isPresent()){
+            throw new IllegalStateException("No items for user with email " + email);
+        }
+
+        for (Item item: items.get()){
+            item.setUser(null);
+        }
+
+        return items.get();
+    }
 }
