@@ -110,6 +110,10 @@ public class User {
         this.role = role;
     }
 
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
     public List<Item> getItems() {
         return items;
     }

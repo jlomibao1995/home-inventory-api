@@ -3,6 +3,7 @@ package com.homeinventory.homeinventory.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping(path = "{email}")
-    public User getUser(@PathVariable("email") String email ){
-        return userService.getUser(email);
+    public User getUser(@PathVariable("email") String email, Principal user ){
+        return userService.getUser(email, user);
     }
 
     @PostMapping
@@ -43,8 +44,9 @@ public class UserController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) boolean active,
-            @RequestParam(required = false) String password
+            @RequestParam(required = false) String password,
+            Principal user
     ){
-        userService.updateUser(userId, email, name, active, password);
+        userService.updateUser(userId, email, name, active, password, user);
     }
 }

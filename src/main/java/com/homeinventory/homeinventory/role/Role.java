@@ -2,6 +2,7 @@ package com.homeinventory.homeinventory.role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.homeinventory.homeinventory.user.User;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Entity(name = "Role")
 @Table(name = "role")
-public class Role {
+public class Role implements GrantedAuthority {
     @Id
     @SequenceGenerator(
             name = "role_sequence",
@@ -72,5 +73,10 @@ public class Role {
                 "id=" + id +
                 ", roleName='" + roleName + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getAuthority() {
+        return this.roleName;
     }
 }

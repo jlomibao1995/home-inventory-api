@@ -3,6 +3,7 @@ package com.homeinventory.homeinventory.item;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.homeinventory.homeinventory.category.Category;
 import com.homeinventory.homeinventory.user.User;
+import org.intellij.lang.annotations.Pattern;
 
 import javax.persistence.*;
 

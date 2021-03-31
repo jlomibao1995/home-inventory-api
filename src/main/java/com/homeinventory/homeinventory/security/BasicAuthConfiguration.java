@@ -45,6 +45,8 @@ public class BasicAuthConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*", "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/inventory/api/v1/user").permitAll()
+                .antMatchers("/inventory/api/v1/item", "/inventory/api/v1/user").hasAuthority("Admin")
+                .antMatchers(HttpMethod.DELETE, "/inventory/api/v1/user/*").hasAuthority("Admin")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
@@ -53,7 +55,6 @@ public class BasicAuthConfiguration extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", "XSRF-TOKEN")
                 .clearAuthentication(true);
-//                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
 

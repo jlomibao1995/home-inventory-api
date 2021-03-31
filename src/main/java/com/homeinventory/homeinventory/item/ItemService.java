@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,35 +36,52 @@ public class ItemService {
         }
         item.setUser(owner.get());
 
-        Optional<Category> category = categoryRepository.findByCategoryName(item.getCategory().getCategoryName());
+        boolean exists = categoryRepository.existsById(item.getCategory().getId());
 
-        if (!category.isPresent()){
-            throw new IllegalStateException("Category " + item.getCategory().getCategoryName() + " does not exist");
+        if (!exists){
+            throw new IllegalStateException("Category " + item.getCategory().getId() + " does not exist");
         }
-        item.setCategory(category.get());
+        Category category = categoryRepository.getOne(item.getCategory().getId());
+        item.setCategory(category);
 
         itemRepository.save(item);
     }
 
     public List<Item> getItems() {
-        return itemRepository.findAll();
+
+        List<Item> items = itemRepository.findAll();
+
+        for (Item item: items){
+            item.getUser().setPassword(null);
+            item.getUser().setItems(null);
+        }
+        return items;
     }
 
-    public void deleteItem(Long itemId) {
+    public void deleteItem(Long itemId, Principal user) {
         boolean exists = itemRepository.existsById(itemId);
         if (!exists){
             throw new IllegalStateException("Item with id " + itemId + " does not exist");
         }
 
         Item item = itemRepository.getOne(itemId);
+
+        if (!Objects.equals(item.getUser().getEmail(), user.getName())){
+            throw new IllegalStateException("User with email " + user.getName() + " does not own this item");
+        }
+
         item.getUser().removeItem(item);
 
         itemRepository.deleteById(itemId);
     }
 
     @Transactional
-    public void updateItem(Long itemId, String itemName, double price, Long categoryId) {
+    public void updateItem(Long itemId, String itemName, double price, Long categoryId, Principal user) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalStateException("Item with id " + itemId + "does not exist"));
+
+        if (!Objects.equals(item.getUser().getEmail(), user.getName())){
+            throw new IllegalStateException("User with email " + user.getName() + " does not own this item");
+        }
 
         if (itemName != null && !Objects.equals(item.getItemName(), itemName)){
             item.setItemName(itemName);
@@ -80,7 +98,11 @@ public class ItemService {
 
     }
 
-    public List<Item> getItems(String email) {
+    public List<Item> getItems(String email, Principal user) {
+        if (!Objects.equals(email, user.getName())){
+            throw new IllegalStateException("Unauthorized access");
+        }
+
         Optional<List<Item>> items = itemRepository.findAllByUser_Email(email);
 
         if (!items.isPresent()){
@@ -88,7 +110,8 @@ public class ItemService {
         }
 
         for (Item item: items.get()){
-            item.setUser(null);
+            item.getUser().setPassword(null);
+            item.getUser().setItems(null);
         }
 
         return items.get();

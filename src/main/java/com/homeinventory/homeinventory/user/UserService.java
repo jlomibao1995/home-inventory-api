@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,7 +25,15 @@ public class UserService {
     }
 
     public List<User> getUsers(){
-        return userRepository.findAll();
+
+        List<User> users =  userRepository.findAll();
+
+        for (User user: users){
+            user.setPassword(null);
+            user.setItems(null);
+        }
+
+        return users;
     }
 
     public void addNewUser(User user){
@@ -47,9 +56,13 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long userId, String email, String name, boolean active, String password){
+    public void updateUser(Long userId, String email, String name, boolean active, String password, Principal currentUser){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User with user id " + userId + " does not exist"));
+
+        if (!Objects.equals(user.getEmail(), currentUser.getName())){
+            throw new IllegalStateException("Unauthorized user");
+        }
 
         if (name != null && name.length() > 0 && !Objects.equals(user.getName(), name)) {
             user.setName(name);
@@ -74,13 +87,19 @@ public class UserService {
         }
     }
 
-    public User getUser(String email) {
+    public User getUser(String email, Principal currentUser) {
         Optional<User> user = userRepository.findUserByEmail(email);
 
         if(user.isPresent()){
+            if (!Objects.equals(user.get().getEmail(), currentUser.getName())){
+                throw new IllegalStateException("Unauthorized user");
+            }
+
             for (Item item: user.get().getItems()){
                 item.setUser(null);
             }
+
+            user.get().setPassword(null);
             return user.get();
         } else {
             throw new IllegalArgumentException("User with that email does not exist");
